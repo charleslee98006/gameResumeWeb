@@ -2,6 +2,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 var cursors;
 var player;
 var starfield;
+var direction;
 
 function preload () {
             // game.load.image('logo', 'phaser.png');
@@ -36,7 +37,9 @@ function create () {
 		    //  Our two animations, walking left and right.
 		    player.animations.add('left', [0, 1, 2, 3,4,5,6,7,8,9,10], 20,true);
 		    player.animations.add('right', [12, 13, 14, 15,16,17,18,19,20,21], 20,true);
-		    player.animations.add('standby', [22, 23, 24, 25, 26], 4, true);
+		    player.animations.add('face-right', [22, 23, 24, 25, 26], 4, true);
+		    player.animations.add('turnRight', [27,28,29],4,true);
+		    player.animations.add('face-left', [30,31, 32,33,34], 4, true);
 
 		    cursors = game.input.keyboard.createCursorKeys();
 }
@@ -46,20 +49,34 @@ function update (){
         	if (cursors.left.isDown){
 	        //  Move to the left
 		        player.body.velocity.x = -200;
-		        console.log("Hitting!");
-		        player.animations.play('left');
+		        if(direction== "left"){
+		        	player.animations.play('left');
+		    	}
+		        direction="left";
 	    	}
 	    	else if (cursors.right.isDown){
 	        //  Move to the right
+	        	if(direction =="left"){
+	        		console.log("TurnLeft");
+	        		player.animations.play('turnRight');
+	        	}
 	        	player.body.velocity.x = 200;
 
 	        	player.animations.play('right');
+	        	direction="right";
+
 	        }
 	        else{
+	        	console.log(direction);
 	    	// player.animations.play('right');
 	        //  Stand still
 	        // player.frame =0;
-	        player.animations.play('standby');
+	     	if (direction=="right"){
+	     		player.animations.play('face-right');
+	     	}
+	     	else if(direction =="left"){
+				player.animations.play('face-left');
+	     	}
 	        // 	player.animations.stop();
 	        // player.frame = 11;
 	    	}
